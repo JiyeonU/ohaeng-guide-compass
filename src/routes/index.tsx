@@ -1,11 +1,17 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { BirthForm, type BirthInput } from "@/components/BirthForm";
+import { BirthForm } from "@/components/BirthForm";
 import { LanguageGate } from "@/components/LanguageGate";
-import { WellnessReport } from "@/components/WellnessReport";
+import { LANGUAGES } from "@/data/locales";
 import type { LangKey } from "@/data/types";
 
 export const Route = createFileRoute("/")({
+  validateSearch: (search: Record<string, unknown>): { lang?: LangKey } => {
+    const raw = search["lang"];
+    return typeof raw === "string" && LANGUAGES.includes(raw as LangKey)
+      ? { lang: raw as LangKey }
+      : {};
+  },
   head: () => ({
     meta: [
       { title: "Five Elements Wellness Report | CenLuck K-Wellness" },
@@ -28,21 +34,27 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const [lang, setLang] = useState<LangKey | null>(null);
-  const [input, setInput] = useState<BirthInput | null>(null);
+  const { lang: langParam } = Route.useSearch();
+  const navigate = useNavigate();
+  const [lang, setLang] = useState<LangKey | null>(langParam ?? null);
 
-  if (!lang) return <LanguageGate onSelect={setLang} />;
+  const chooseLang = (next: LangKey) => {
+    setLang(next);
+    navigate({ to: "/", search: { lang: next } });
+  };
 
-  if (!input) {
-    return <BirthForm lang={lang} onChangeLang={setLang} onSubmit={setInput} />;
-  }
+  if (!lang) return <LanguageGate onSelect={chooseLang} />;
 
   return (
-    <WellnessReport
+    <BirthForm
       lang={lang}
-      input={input}
-      onChangeLang={setLang}
-      onRestart={() => setInput(null)}
+      onChangeLang={chooseLang}
+      onSubmit={(input) =>
+        navigate({
+          to: "/report",
+          search: { lang, name: input.name, y: input.year, m: input.month, d: input.day },
+        })
+      }
     />
   );
 }
