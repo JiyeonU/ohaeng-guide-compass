@@ -58,7 +58,7 @@ function ReportPage() {
       lang={lang}
       input={{ name: name || "Guest", year: y, month: m, day: d }}
       onChangeLang={(next) =>
-        navigate({ to: "/report", search: (prev: ReportSearch) => ({ ...prev, lang: next }) })
+        navigate({ to: "/report", search: { lang: next, name, y, m, d } })
       }
       onRestart={() => navigate({ to: "/", search: { lang } })}
     />
