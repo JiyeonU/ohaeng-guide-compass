@@ -18,13 +18,14 @@ function toInt(value: unknown, fallback: number) {
 
 export const Route = createFileRoute("/report")({
   validateSearch: (search: Record<string, unknown>): ReportSearch => {
-    const lang = String(search.lang ?? "en") as LangKey;
+    const rawLang = String(search["lang"] ?? "en") as LangKey;
+    const rawName = search["name"];
     return {
-      lang: LANGUAGES.includes(lang) ? lang : "en",
-      name: typeof search.name === "string" ? search.name.slice(0, 60) : "",
-      y: Math.min(2025, Math.max(1930, toInt(search.y, 1995))),
-      m: Math.min(12, Math.max(1, toInt(search.m, 5))),
-      d: Math.min(31, Math.max(1, toInt(search.d, 15))),
+      lang: LANGUAGES.includes(rawLang) ? rawLang : "en",
+      name: typeof rawName === "string" ? rawName.slice(0, 60) : "",
+      y: Math.min(2025, Math.max(1930, toInt(search["y"], 1995))),
+      m: Math.min(12, Math.max(1, toInt(search["m"], 5))),
+      d: Math.min(31, Math.max(1, toInt(search["d"], 15))),
     };
   },
   head: () => ({
@@ -57,7 +58,7 @@ function ReportPage() {
       lang={lang}
       input={{ name: name || "Guest", year: y, month: m, day: d }}
       onChangeLang={(next) =>
-        navigate({ to: "/report", search: (prev) => ({ ...prev, lang: next }) })
+        navigate({ to: "/report", search: (prev: ReportSearch) => ({ ...prev, lang: next }) })
       }
       onRestart={() => navigate({ to: "/", search: { lang } })}
     />
