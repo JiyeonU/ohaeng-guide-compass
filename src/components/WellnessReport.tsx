@@ -120,7 +120,6 @@ export function WellnessReport({
                 <span className="font-display text-5xl text-gold">{element.hanja}</span>
               </span>
             </div>
-            <p className="mt-4 text-3xl">{element.symbol}</p>
             <h1 className="mt-6 text-2xl font-semibold text-primary-foreground sm:text-3xl">
               {t.reportTitle}
             </h1>

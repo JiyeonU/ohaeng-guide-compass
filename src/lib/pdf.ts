@@ -19,10 +19,17 @@ export async function exportReportPdf(node: HTMLElement, name: string, lang: Lan
     import("jspdf"),
   ]);
 
+  const width = node.scrollWidth;
   const canvas = await html2canvas(node, {
     scale: Math.min(2, window.devicePixelRatio || 1.5),
     backgroundColor: "#faf6ee",
     useCORS: true,
+    width,
+    height: node.scrollHeight,
+    windowWidth: width,
+    windowHeight: node.scrollHeight,
+    scrollX: 0,
+    scrollY: 0,
   });
 
   const pdf = new jsPDF({ unit: "pt", format: "a4", orientation: "portrait" });
