@@ -115,8 +115,12 @@ export function WellnessReport({
                 CenLuck
               </span>
             </div>
-            <p className="mt-8 text-6xl sm:text-7xl">{element.symbol}</p>
-            <p className="mt-3 font-display text-4xl text-gold sm:text-5xl">{element.hanja}</p>
+            <div className="mt-8 flex justify-center">
+              <span className="grid size-28 place-items-center rounded-full border border-gold/50 bg-primary-foreground/5">
+                <span className="font-display text-5xl text-gold">{element.hanja}</span>
+              </span>
+            </div>
+            <p className="mt-4 text-3xl">{element.symbol}</p>
             <h1 className="mt-6 text-2xl font-semibold text-primary-foreground sm:text-3xl">
               {t.reportTitle}
             </h1>
@@ -185,7 +189,7 @@ export function WellnessReport({
               </h3>
               <p className="mt-2 text-sm leading-relaxed">{element.body.emotion}</p>
             </div>
-            <ListBlock title={t.sectionTitles[1]!} items={element.body.organTraits} />
+            <ListBlock title={t.traits} items={element.body.organTraits} />
           </div>
           <div className="mt-4">
             <ListBlock title={t.links} items={element.body.links} />
