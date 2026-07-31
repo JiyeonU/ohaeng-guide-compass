@@ -1,24 +1,48 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
+import { BirthForm, type BirthInput } from "@/components/BirthForm";
+import { LanguageGate } from "@/components/LanguageGate";
+import { WellnessReport } from "@/components/WellnessReport";
+import type { LangKey } from "@/data/types";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Five Elements Wellness Report | CenLuck K-Wellness" },
+      {
+        name: "description",
+        content:
+          "Find your Ohaeng (Five Elements) constitution from your birth date and get a Korean wellness plan, Busan healing journey and PDF report in English, Korean or Chinese.",
+      },
+      { property: "og:title", content: "Five Elements Wellness Report | CenLuck" },
+      {
+        property: "og:description",
+        content:
+          "Ohaeng constitution, K-wellness plan, Busan healing spots and a downloadable PDF report — multilingual and fully private.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
+  const [lang, setLang] = useState<LangKey | null>(null);
+  const [input, setInput] = useState<BirthInput | null>(null);
+
+  if (!lang) return <LanguageGate onSelect={setLang} />;
+
+  if (!input) {
+    return <BirthForm lang={lang} onChangeLang={setLang} onSubmit={setInput} />;
+  }
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <WellnessReport
+      lang={lang}
+      input={input}
+      onChangeLang={setLang}
+      onRestart={() => setInput(null)}
+    />
   );
 }
