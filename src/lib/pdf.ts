@@ -19,18 +19,26 @@ export async function exportReportPdf(node: HTMLElement, name: string, lang: Lan
     import("jspdf"),
   ]);
 
+  // Capture an isolated clone so ancestor gradients/effects can't tint the render.
   const width = node.scrollWidth;
-  const canvas = await html2canvas(node, {
-    scale: Math.min(2, window.devicePixelRatio || 1.5),
-    backgroundColor: "#faf6ee",
-    useCORS: true,
-    width,
-    height: node.scrollHeight,
-    windowWidth: width,
-    windowHeight: node.scrollHeight,
-    scrollX: 0,
-    scrollY: 0,
-  });
+  const holder = document.createElement("div");
+  holder.style.cssText = `position:fixed;left:-10000px;top:0;width:${width}px;background:#faf6ee;padding:0;z-index:-1;`;
+  const clone = node.cloneNode(true) as HTMLElement;
+  clone.style.width = `${width}px`;
+  holder.appendChild(clone);
+  document.body.appendChild(holder);
+
+  let canvas: HTMLCanvasElement;
+  try {
+    canvas = await html2canvas(clone, {
+      scale: Math.min(2, window.devicePixelRatio || 1.5),
+      backgroundColor: "#faf6ee",
+      useCORS: true,
+      windowWidth: width,
+    });
+  } finally {
+    holder.remove();
+  }
 
   const pdf = new jsPDF({ unit: "pt", format: "a4", orientation: "portrait" });
   const pageW = pdf.internal.pageSize.getWidth();
