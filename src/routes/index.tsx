@@ -52,7 +52,15 @@ function Index() {
       onSubmit={(input) =>
         navigate({
           to: "/report",
-          search: { lang, name: input.name, y: input.year, m: input.month, d: input.day },
+          search: {
+            lang,
+            name: input.name,
+            y: input.year,
+            m: input.month,
+            d: input.day,
+            cal: input.calendar,
+            ...(input.hour != null ? { h: input.hour } : {}),
+          },
         })
       }
     />
