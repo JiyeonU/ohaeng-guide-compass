@@ -106,19 +106,19 @@ export const reportEn: ElementReportSet = {
     },
     busan: [
       {
-        spot: "Igidae Coastal Trail",
-        action: "Walk the pine section slowly and breathe in a 4-6 count",
-        note: "Sea wind plus forest air is the classic Wood reset.",
+        spot: "Seonamsa Temple",
+        action: "Walk the forested path up to the temple at an unhurried pace",
+        note: "Mountain-forest air is the classic Wood reset.",
       },
       {
-        spot: "Beomeosa Temple, Geumjeongsan",
-        action: "Join a temple stay morning session or simply sit for 15 minutes",
-        note: "Stillness among old trees settles restless upward energy.",
+        spot: "Crape Myrtle of Yangjeong-dong (Hwaji Park)",
+        action: "Sit under the centuries-old tree and breathe in a 4-6 count",
+        note: "An ancient living tree grows and grounds your Wood energy.",
       },
       {
-        spot: "Oncheoncheon Citizens' Park",
-        action: "Stretch by the stream at sunset, then a bowl of wild greens bibimbap",
-        note: "Green food for a green constitution.",
+        spot: "Daewonsa Temple",
+        action: "Stroll the shaded garden grounds before entering the hall",
+        note: "Green, quiet growth suits the Wood constitution.",
       },
     ],
     daily: {
@@ -184,19 +184,19 @@ export const reportEn: ElementReportSet = {
     },
     busan: [
       {
-        spot: "Haeundae Beach at sunrise",
-        action: "Barefoot walk on wet sand for 20 minutes before the crowds",
-        note: "Cool water grounding for an overheated constitution.",
+        spot: "Samgwangsa Temple",
+        action: "Visit near dusk when the lanterns glow",
+        note: "Warm lantern light lifts and settles Fire.",
       },
       {
-        spot: "Hurshimchung hot spring, Dongnae",
-        action: "Short warm soak, then a full cool rinse — repeat twice, no longer",
-        note: "Contrast bathing regulates Fire circulation.",
+        spot: "Busan Citizens Park",
+        action: "Take a brisk sunlit lap around the central lawns",
+        note: "Open, active space channels Fire's vitality.",
       },
       {
-        spot: "Dalmaji Hill moon-viewing path",
-        action: "Evening walk, phone off, watch the moon over the sea",
-        note: "Quiet beauty is medicine for the heart.",
+        spot: "Gayasa Temple",
+        action: "Watch a candle offering, then sit quietly for five minutes",
+        note: "A small steady flame focuses restless Fire.",
       },
     ],
     daily: {
@@ -262,19 +262,19 @@ export const reportEn: ElementReportSet = {
     },
     busan: [
       {
-        spot: "Jagalchi & Bupyeong Kkangtong Market",
-        action: "Eat one warm, freshly cooked meal seated — no walking and eating",
-        note: "Earth heals through unhurried nourishment.",
+        spot: "Busan Citizens' Library",
+        action: "Read quietly for twenty minutes among the archives",
+        note: "Still, rooted knowledge steadies Earth.",
       },
       {
-        spot: "Geumgang Park & Geumjeongsanseong Fortress",
-        action: "Gentle uphill walk for 40 minutes, steady rhythm",
-        note: "Regular pace strengthens the Earth centre.",
+        spot: "Cheontae Buddhism Central Museum",
+        action: "Move slowly through the collection without rushing",
+        note: "Unhurried culture nourishes the Earth center.",
       },
       {
-        spot: "Songdo Yonggung Suspension Bridge",
-        action: "Slow crossing with grounding breath, three stops to look down",
-        note: "Trusting your footing is the Earth lesson.",
+        spot: "Dong-eui University Museum",
+        action: "Spend unhurried time with the ancient relics on display",
+        note: "Connecting to deep history grounds Earth.",
       },
     ],
     daily: {
@@ -340,19 +340,14 @@ export const reportEn: ElementReportSet = {
     },
     busan: [
       {
-        spot: "Haedong Yonggungsa Temple",
-        action: "Breathe with the wave rhythm at the sea-cliff shrine, 10 minutes",
-        note: "Sea mist is natural lung therapy for Metal types.",
+        spot: "Orbicular Gabbro of Jeonpo-dong",
+        action: "Stand by the rare orbicular rock and take ten slow breaths",
+        note: "Mineral stone is the direct Metal prescription.",
       },
       {
-        spot: "Museum of Contemporary Art Busan, Eulsukdo",
-        action: "One slow gallery loop, then 20 minutes in the wetland",
-        note: "Clean form and quiet order restore Metal clarity.",
-      },
-      {
-        spot: "Taejongdae cliffs",
-        action: "Walk the pine loop and stop at each viewpoint for five long breaths",
-        note: "Wide horizons loosen a tight chest.",
+        spot: "Hongjesa Temple",
+        action: "Listen to the temple bell resonate and slowly fade",
+        note: "A clear ringing bronze tone refines Metal.",
       },
     ],
     daily: {
@@ -418,19 +413,19 @@ export const reportEn: ElementReportSet = {
     },
     busan: [
       {
-        spot: "Hurshimchung / Dongnae hot springs",
-        action: "Warm soak with the lower back submerged, 15 minutes maximum",
-        note: "Mineral heat is the direct Water prescription.",
+        spot: "Seongjigok Reservoir (Children's Grand Park)",
+        action: "Walk the water's edge and match your breath to the stillness",
+        note: "Still, fresh water is the direct Water reset.",
       },
       {
-        spot: "Gamcheon Culture Village",
-        action: "Slow uphill wander, sketch or photograph one detail",
-        note: "Creative attention feeds Water energy.",
+        spot: "Cheonggyesa Temple",
+        action: "Rest by the temple's clear-stream setting for ten minutes",
+        note: "Flowing, clear water calms Water.",
       },
       {
-        spot: "Gwangalli Beach at night",
-        action: "Sit with the bridge lights, 10 minutes of silent watching",
-        note: "Water restores by stillness, not stimulation.",
+        spot: "Cheonansa Temple",
+        action: "Breathe with the mountain quiet at the hillside shrine",
+        note: "Cool mountain calm replenishes Water.",
       },
     ],
     daily: {
