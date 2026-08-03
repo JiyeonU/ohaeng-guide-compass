@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { QRCodeCanvas, QRCodeSVG } from "qrcode.react";
 import { LANG_LABELS, LANGUAGES, REPORTS, UI } from "@/data/locales";
 import type { ElementKey, LangKey } from "@/data/types";
 import { ELEMENT_ORDER, calculateOhaeng } from "@/lib/ohaeng";
@@ -326,24 +325,13 @@ export function WellnessReport({
 
         <footer className="mt-6 flex flex-col items-center gap-4 py-6 text-center">
           <CenLuckLogo />
-          {shareUrl && (
-            <div className="flex flex-col items-center gap-2">
-              <span className="rounded-lg bg-white p-2">
-                <QRCodeCanvas value={shareUrl} size={96} />
-              </span>
-              <span className="text-[11px] text-muted-foreground">{t.scanToOpen}</span>
-            </div>
-          )}
           <p className="text-xs text-muted-foreground">{t.footer}</p>
         </footer>
       </div>
 
       {shareUrl && (
         <div className="mx-auto mt-6 max-w-3xl">
-          <div className="card-report flex flex-col items-center gap-5 p-6 sm:flex-row sm:gap-7 sm:p-8">
-            <span className="rounded-xl bg-white p-3">
-              <QRCodeSVG value={shareUrl} size={120} />
-            </span>
+          <div className="card-report p-6 sm:p-8">
             <div className="flex-1 text-center sm:text-left">
               <h3 className="font-display text-lg">{t.shareTitle}</h3>
               <p className="mt-1 text-xs leading-relaxed break-all text-muted-foreground">
