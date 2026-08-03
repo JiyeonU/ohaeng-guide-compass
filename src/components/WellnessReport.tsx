@@ -1,4 +1,5 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { QRCodeCanvas, QRCodeSVG } from "qrcode.react";
 import { LANG_LABELS, LANGUAGES, REPORTS, UI } from "@/data/locales";
 import type { ElementKey, LangKey } from "@/data/types";
 import { ELEMENT_ORDER, calculateOhaeng } from "@/lib/ohaeng";
@@ -61,10 +62,38 @@ export function WellnessReport({
   onRestart: () => void;
 }) {
   const t = UI[lang];
-  const result = calculateOhaeng(input.year, input.month, input.day);
+  const result = calculateOhaeng(input.year, input.month, input.day, input.hour, input.calendar);
   const element = REPORTS[lang][result.dominant];
   const reportRef = useRef<HTMLDivElement>(null);
   const [busy, setBusy] = useState(false);
+  const [shareUrl, setShareUrl] = useState("");
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") setShareUrl(window.location.href);
+  }, [lang, input.name, input.year, input.month, input.day, input.hour, input.calendar]);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    } catch {
+      /* clipboard unavailable */
+    }
+  };
+
+  const handleShare = async () => {
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({ title: t.reportTitle, url: shareUrl });
+      } catch {
+        /* share cancelled */
+      }
+    } else {
+      handleCopy();
+    }
+  };
 
   const handleDownload = async () => {
     if (!reportRef.current) return;
@@ -297,9 +326,49 @@ export function WellnessReport({
 
         <footer className="mt-6 flex flex-col items-center gap-4 py-6 text-center">
           <CenLuckLogo />
+          {shareUrl && (
+            <div className="flex flex-col items-center gap-2">
+              <span className="rounded-lg bg-white p-2">
+                <QRCodeCanvas value={shareUrl} size={96} />
+              </span>
+              <span className="text-[11px] text-muted-foreground">{t.scanToOpen}</span>
+            </div>
+          )}
           <p className="text-xs text-muted-foreground">{t.footer}</p>
         </footer>
       </div>
+
+      {shareUrl && (
+        <div className="mx-auto mt-6 max-w-3xl">
+          <div className="card-report flex flex-col items-center gap-5 p-6 sm:flex-row sm:gap-7 sm:p-8">
+            <span className="rounded-xl bg-white p-3">
+              <QRCodeSVG value={shareUrl} size={120} />
+            </span>
+            <div className="flex-1 text-center sm:text-left">
+              <h3 className="font-display text-lg">{t.shareTitle}</h3>
+              <p className="mt-1 text-xs leading-relaxed break-all text-muted-foreground">
+                {shareUrl}
+              </p>
+              <div className="mt-4 flex flex-wrap justify-center gap-3 sm:justify-start">
+                <button
+                  type="button"
+                  onClick={handleCopy}
+                  className="rounded-xl border border-border bg-card px-4 py-2 text-sm font-medium transition-colors hover:text-foreground"
+                >
+                  {copied ? t.copied : t.copyLink}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleShare}
+                  className="rounded-xl bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-all hover:brightness-110"
+                >
+                  {t.share}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="mx-auto mt-2 max-w-3xl pb-10">
         <button

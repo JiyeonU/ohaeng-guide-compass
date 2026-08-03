@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { LANG_LABELS, LANGUAGES, UI } from "@/data/locales";
-import type { LangKey } from "@/data/types";
+import type { CalendarType, LangKey } from "@/data/types";
 import { CenLuckLogo } from "./CenLuckLogo";
 
 export interface BirthInput {
@@ -8,10 +8,13 @@ export interface BirthInput {
   year: number;
   month: number;
   day: number;
+  hour: number | null;
+  calendar: CalendarType;
 }
 
 const YEARS = Array.from({ length: 96 }, (_, i) => 2025 - i);
 const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1);
+const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
 const selectClass =
   "w-full appearance-none rounded-xl border border-input bg-card px-3 py-3 font-sans text-sm text-foreground outline-none transition-colors focus:border-celadon focus:ring-2 focus:ring-ring/25";
@@ -30,6 +33,8 @@ export function BirthForm({
   const [year, setYear] = useState(1995);
   const [month, setMonth] = useState(5);
   const [day, setDay] = useState(15);
+  const [hour, setHour] = useState<number | null>(null);
+  const [calendar, setCalendar] = useState<CalendarType>("solar");
   const [error, setError] = useState(false);
 
   const daysInMonth = new Date(year, month, 0).getDate();
@@ -42,7 +47,7 @@ export function BirthForm({
       return;
     }
     setError(false);
-    onSubmit({ name: name.trim(), year, month, day });
+    onSubmit({ name: name.trim(), year, month, day, hour, calendar });
   };
 
   return (
@@ -132,6 +137,47 @@ export function BirthForm({
             </select>
           </div>
         </fieldset>
+
+        <fieldset className="mt-6">
+          <legend className="text-xs font-medium tracking-[0.14em] text-celadon uppercase">
+            {t.calendarLabel}
+          </legend>
+          <div className="mt-2 grid grid-cols-2 gap-3">
+            {(["solar", "lunar"] as const).map((c) => (
+              <button
+                key={c}
+                type="button"
+                onClick={() => setCalendar(c)}
+                className={`rounded-xl border px-3 py-3 text-sm font-medium transition-colors ${
+                  calendar === c
+                    ? "border-celadon bg-primary text-primary-foreground"
+                    : "border-input bg-card text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {c === "solar" ? t.solar : t.lunar}
+              </button>
+            ))}
+          </div>
+        </fieldset>
+
+        <label className="mt-6 block">
+          <span className="text-xs font-medium tracking-[0.14em] text-celadon uppercase">
+            {t.formTime}
+          </span>
+          <select
+            aria-label={t.formTime}
+            className={`${selectClass} mt-2`}
+            value={hour === null ? "" : hour}
+            onChange={(e) => setHour(e.target.value === "" ? null : Number(e.target.value))}
+          >
+            <option value="">{t.timeUnknown}</option>
+            {HOURS.map((h) => (
+              <option key={h} value={h}>
+                {String(h).padStart(2, "0")}:00
+              </option>
+            ))}
+          </select>
+        </label>
 
         {error && <p className="mt-4 text-sm text-destructive">{t.formError}</p>}
 
