@@ -39,9 +39,10 @@ export interface OhaengResult {
  *
  * Uses lunar-typescript so the YEAR pillar changes at 입춘 (立春) — not Jan 1 —
  * and the MONTH pillar changes at the solar terms (節/절기), not the calendar month.
- * The five-element distribution is a transparent tally of the pillars' visible
- * stems and branches (weight 1) plus the branch hidden stems / 지장간 (weight 0.3).
- * No random values and no date-arithmetic nudges.
+ * `dominant` is the DAY MASTER (일간, the day-pillar heavenly stem) — the classical
+ * "your element" in Saju. `percentages` is a transparent distribution of all pillars'
+ * visible stems + branches (weight 1) plus branch hidden stems / 지장간 (weight 0.3),
+ * shown as the balance chart. No random values and no date-arithmetic nudges.
  *
  * @param hour     0–23 birth hour, or null when unknown (then only 3 pillars are used).
  * @param calendar "solar" (양력, default) or "lunar" (음력) interpretation of the input date.
@@ -112,10 +113,11 @@ export function calculateOhaeng(
     percentages[key] = Math.round((scores[key] / total) * 1000) / 10;
   });
 
-  const dominant = ELEMENT_ORDER.reduce<ElementKey>(
-    (best, key) => (scores[key] > scores[best] ? key : best),
-    "wood",
-  );
+  // Your element = the Day Master (일간): the heavenly stem of the day pillar.
+  const dayStem = ec.getDayGan();
+  const dominant: ElementKey =
+    STEM_ELEMENT[dayStem] ??
+    ELEMENT_ORDER.reduce<ElementKey>((best, key) => (scores[key] > scores[best] ? key : best), "wood");
 
   return {
     dominant,
