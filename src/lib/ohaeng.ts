@@ -1,80 +1,73 @@
-import type { ElementKey } from "@/data/types";
+import { Lunar, Solar } from "lunar-typescript";
+import type { CalendarType, ElementKey } from "@/data/types";
 
 export const ELEMENT_ORDER: ElementKey[] = ["wood", "fire", "earth", "metal", "water"];
 
-/** Heavenly-stem element cycle: 0-9 -> wood, wood, fire, fire, earth, earth, metal, metal, water, water */
-const STEM_ELEMENTS: ElementKey[] = [
-  "wood",
-  "wood",
-  "fire",
-  "fire",
-  "earth",
-  "earth",
-  "metal",
-  "metal",
-  "water",
-  "water",
-];
+/** Chinese five-element character (from the library's WuXing strings) -> our key. */
+const CN_ELEMENT: Record<string, ElementKey> = {
+  木: "wood",
+  火: "fire",
+  土: "earth",
+  金: "metal",
+  水: "water",
+};
 
-/** Earthly-branch element by index 0-11 (starting at 子 / rat). */
-const BRANCH_ELEMENTS: ElementKey[] = [
-  "water",
-  "earth",
-  "wood",
-  "wood",
-  "earth",
-  "fire",
-  "fire",
-  "earth",
-  "metal",
-  "metal",
-  "earth",
-  "water",
-];
-
-/** Seasonal element of the birth month (solar-month approximation, no hour/timezone math). */
-const MONTH_ELEMENTS: ElementKey[] = [
-  "water", // Jan
-  "wood", // Feb
-  "wood", // Mar
-  "earth", // Apr
-  "fire", // May
-  "fire", // Jun
-  "earth", // Jul
-  "metal", // Aug
-  "metal", // Sep
-  "earth", // Oct
-  "water", // Nov
-  "water", // Dec
-];
+/** Heavenly stem (天干) -> element, used for the hidden stems (지장간/藏干) of each branch. */
+const STEM_ELEMENT: Record<string, ElementKey> = {
+  甲: "wood",
+  乙: "wood",
+  丙: "fire",
+  丁: "fire",
+  戊: "earth",
+  己: "earth",
+  庚: "metal",
+  辛: "metal",
+  壬: "water",
+  癸: "water",
+};
 
 export interface OhaengResult {
   dominant: ElementKey;
   scores: Record<ElementKey, number>;
   percentages: Record<ElementKey, number>;
-  yearStemElement: ElementKey;
-  yearBranchElement: ElementKey;
+  /** Four-pillar Gan-Zhi (사주팔자). hour is null when the birth time is unknown. */
+  pillars: { year: string; month: string; day: string; hour: string | null };
 }
 
 /**
- * Lightweight, fully client-side Ohaeng (Five Elements) calculation.
- * Uses birth year / month / day only — no birth hour, no timezone conversion,
- * so the same local date always produces the same result anywhere in the world.
+ * Real, solar-term-aware Saju (BaZi) five-element calculation, fully client-side.
+ *
+ * Uses lunar-typescript so the YEAR pillar changes at 입춘 (立春) — not Jan 1 —
+ * and the MONTH pillar changes at the solar terms (節/절기), not the calendar month.
+ * The five-element distribution is a transparent tally of the pillars' visible
+ * stems and branches (weight 1) plus the branch hidden stems / 지장간 (weight 0.3).
+ * No random values and no date-arithmetic nudges.
+ *
+ * @param hour     0–23 birth hour, or null when unknown (then only 3 pillars are used).
+ * @param calendar "solar" (양력, default) or "lunar" (음력) interpretation of the input date.
  */
-export function calculateOhaeng(year: number, month: number, day: number): OhaengResult {
-  const stemIndex = (((year - 4) % 10) + 10) % 10;
-  const branchIndex = (((year - 4) % 12) + 12) % 12;
+export function calculateOhaeng(
+  year: number,
+  month: number,
+  day: number,
+  hour: number | null = null,
+  calendar: CalendarType = "solar",
+): OhaengResult {
+  let lunar: Lunar;
+  if (calendar === "lunar") {
+    lunar =
+      hour == null
+        ? Lunar.fromYmd(year, month, day)
+        : Lunar.fromYmdHms(year, month, day, hour, 0, 0);
+  } else {
+    const solar =
+      hour == null
+        ? Solar.fromYmd(year, month, day)
+        : Solar.fromYmdHms(year, month, day, hour, 0, 0);
+    lunar = solar.getLunar();
+  }
 
-  const at = <T,>(arr: T[], i: number): T => arr[((i % arr.length) + arr.length) % arr.length] as T;
-
-  const yearStemElement = at(STEM_ELEMENTS, stemIndex);
-  const yearBranchElement = at(BRANCH_ELEMENTS, branchIndex);
-  const monthElement = at(MONTH_ELEMENTS, Math.min(Math.max(month, 1), 12) - 1);
-
-  // Day pillar stem, derived from a fixed reference day count (Julian-style day number).
-  const dayNumber = Math.floor(Date.UTC(year, month - 1, day) / 86400000);
-  const dayStemElement = at(STEM_ELEMENTS, dayNumber + 9);
-  const dayBranchElement = at(BRANCH_ELEMENTS, dayNumber + 1);
+  const ec = lunar.getEightChar();
 
   const scores: Record<ElementKey, number> = {
     wood: 0,
@@ -84,18 +77,36 @@ export function calculateOhaeng(year: number, month: number, day: number): Ohaen
     water: 0,
   };
 
-  // Weighted pillars: day stem carries the self, month carries the season.
-  scores[dayStemElement] += 3.2;
-  scores[monthElement] += 2.8;
-  scores[yearStemElement] += 2.1;
-  scores[dayBranchElement] += 1.6;
-  scores[yearBranchElement] += 1.3;
+  // Visible stem + branch element of each pillar (WuXing string is two chars).
+  const addWuXing = (wuxing: string, weight: number) => {
+    for (const ch of wuxing) {
+      const el = CN_ELEMENT[ch];
+      if (el) scores[el] += weight;
+    }
+  };
+  // Hidden stems (지장간) stored inside each earthly branch, at a smaller weight.
+  const addHidden = (stems: string[], weight: number) => {
+    for (const stem of stems) {
+      const el = STEM_ELEMENT[stem];
+      if (el) scores[el] += weight;
+    }
+  };
 
-  // Small deterministic nudge so neighbouring dates differ smoothly.
-  scores[at(ELEMENT_ORDER, day)] += 0.6;
-  scores[at(ELEMENT_ORDER, year + month)] += 0.4;
+  addWuXing(ec.getYearWuXing(), 1);
+  addWuXing(ec.getMonthWuXing(), 1);
+  addWuXing(ec.getDayWuXing(), 1);
+  addHidden(ec.getYearHideGan(), 0.3);
+  addHidden(ec.getMonthHideGan(), 0.3);
+  addHidden(ec.getDayHideGan(), 0.3);
 
-  const total = ELEMENT_ORDER.reduce((sum, key) => sum + scores[key], 0);
+  let hourPillar: string | null = null;
+  if (hour != null) {
+    addWuXing(ec.getTimeWuXing(), 1);
+    addHidden(ec.getTimeHideGan(), 0.3);
+    hourPillar = ec.getTime();
+  }
+
+  const total = ELEMENT_ORDER.reduce((sum, key) => sum + scores[key], 0) || 1;
   const percentages = {} as Record<ElementKey, number>;
   ELEMENT_ORDER.forEach((key) => {
     percentages[key] = Math.round((scores[key] / total) * 1000) / 10;
@@ -106,5 +117,15 @@ export function calculateOhaeng(year: number, month: number, day: number): Ohaen
     "wood",
   );
 
-  return { dominant, scores, percentages, yearStemElement, yearBranchElement };
+  return {
+    dominant,
+    scores,
+    percentages,
+    pillars: {
+      year: ec.getYear(),
+      month: ec.getMonth(),
+      day: ec.getDay(),
+      hour: hourPillar,
+    },
+  };
 }
