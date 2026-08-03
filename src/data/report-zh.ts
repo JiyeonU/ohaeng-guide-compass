@@ -12,6 +12,11 @@ export const uiZh: UiStrings = {
   formYear: "年",
   formMonth: "月",
   formDay: "日",
+  formTime: "出生时间（可选）",
+  timeUnknown: "未知",
+  calendarLabel: "阳历 / 阴历",
+  solar: "阳历",
+  lunar: "阴历",
   formSubmit: "生成我的报告",
   formError: "请输入姓名和有效的出生日期。",
   reportTitle: "五行养生报告",
@@ -40,6 +45,11 @@ export const uiZh: UiStrings = {
   elementNames: { wood: "木", fire: "火", earth: "土", metal: "金", water: "水" },
   footer: "CenLuck · 五行养生报告 · 仅供养生参考，不构成医疗建议。",
   chooseLanguage: "请选择语言",
+  shareTitle: "保存并分享报告",
+  copyLink: "复制链接",
+  copied: "已复制！",
+  share: "分享",
+  scanToOpen: "扫码打开报告",
 };
 
 export const reportZh: ElementReportSet = {

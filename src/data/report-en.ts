@@ -13,6 +13,11 @@ export const uiEn: UiStrings = {
   formYear: "Year",
   formMonth: "Month",
   formDay: "Day",
+  formTime: "Birth time (optional)",
+  timeUnknown: "Unknown",
+  calendarLabel: "Calendar",
+  solar: "Solar",
+  lunar: "Lunar",
   formSubmit: "Generate my report",
   formError: "Please enter your name and a valid birth date.",
   reportTitle: "Five Elements Wellness Report",
@@ -47,6 +52,11 @@ export const uiEn: UiStrings = {
   elementNames: { wood: "Wood", fire: "Fire", earth: "Earth", metal: "Metal", water: "Water" },
   footer: "CenLuck · Five Elements Wellness Report · For wellness guidance only, not medical advice.",
   chooseLanguage: "Choose your language",
+  shareTitle: "Save & share your report",
+  copyLink: "Copy link",
+  copied: "Copied!",
+  share: "Share",
+  scanToOpen: "Scan to open your report",
 };
 
 export const reportEn: ElementReportSet = {

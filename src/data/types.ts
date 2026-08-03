@@ -1,5 +1,6 @@
 export type ElementKey = "wood" | "fire" | "earth" | "metal" | "water";
 export type LangKey = "en" | "ko" | "zh";
+export type CalendarType = "solar" | "lunar";
 
 export interface ElementReport {
   name: string;
@@ -46,6 +47,11 @@ export interface UiStrings {
   formYear: string;
   formMonth: string;
   formDay: string;
+  formTime: string;
+  timeUnknown: string;
+  calendarLabel: string;
+  solar: string;
+  lunar: string;
   formSubmit: string;
   formError: string;
   reportTitle: string;
@@ -74,4 +80,9 @@ export interface UiStrings {
   elementNames: Record<ElementKey, string>;
   footer: string;
   chooseLanguage: string;
+  shareTitle: string;
+  copyLink: string;
+  copied: string;
+  share: string;
+  scanToOpen: string;
 }

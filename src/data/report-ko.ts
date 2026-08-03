@@ -13,6 +13,11 @@ export const uiKo: UiStrings = {
   formYear: "년",
   formMonth: "월",
   formDay: "일",
+  formTime: "태어난 시간 (선택)",
+  timeUnknown: "모름",
+  calendarLabel: "양력 / 음력",
+  solar: "양력",
+  lunar: "음력",
   formSubmit: "리포트 생성하기",
   formError: "이름과 올바른 생년월일을 입력해 주세요.",
   reportTitle: "오행 웰니스 리포트",
@@ -47,6 +52,11 @@ export const uiKo: UiStrings = {
   elementNames: { wood: "목(木)", fire: "화(火)", earth: "토(土)", metal: "금(金)", water: "수(水)" },
   footer: "CenLuck · 오행 웰니스 리포트 · 의료 진단이 아닌 웰니스 참고 자료입니다.",
   chooseLanguage: "언어를 선택하세요",
+  shareTitle: "리포트 저장 · 공유",
+  copyLink: "링크 복사",
+  copied: "복사됨!",
+  share: "공유",
+  scanToOpen: "스캔하여 리포트 열기",
 };
 
 export const reportKo: ElementReportSet = {
